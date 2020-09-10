@@ -4,6 +4,7 @@ from utils.logger import logger
 
 import json
 import time
+import os
 from selenium.webdriver.common.by import By
 
 SEARCH_URL = "https://app.tzuchi.com.tw/tchw/opdreg/DtQuery.aspx?Loc=TC"
@@ -39,6 +40,7 @@ def execute_register(patient: dict) -> None:
                 break
         
         if not found_date:
+            print('unable to find the target date, 指定日期不存在')
             logger.error('unable to find the target date, 指定日期不存在')
         
         id_bar = driver.find_element(By.CSS_SELECTOR, 'input[name="txtMRNo"]')
@@ -46,22 +48,29 @@ def execute_register(patient: dict) -> None:
         time.sleep(300)
         return
     except Exception as e:
+        print(f'execute {patient} failed, {e}')
         logger.exception(f'execute {patient} failed, {e}')
         return
 
 if __name__ == "__main__":
     patient_list = []
     # read file
+    print('start register')
     logger.info('start register')
     try:
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        print('show dir path %s' % dir_path)
         with open('patients.json', 'r+') as patient_file:
             patient_list = json.load(patient_file)
+        print(f'patient list {patient_list}')
         logger.info(f'patient list {patient_list}')
     except Exception as e:
         logger.exception(f'failed to read file, {e}')
+        print(f'failed to read file, {e}')
         patient_list = []
 
     if not patient_list:
+        print(f'patient list {patient_list}')
         logger.error('empty patients, 沒有掛號病人資訊')
         # TODO let user key in by themselves
     
