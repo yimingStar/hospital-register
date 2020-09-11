@@ -60,6 +60,9 @@ if __name__ == "__main__":
     try:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         print('show dir path %s' % dir_path)
+        # TODO check OS
+        # if os = mac, encoding = utf-8
+        # else if windows, endcoding = utf-8-sig
         with open('patients.json', 'r+') as patient_file:
             patient_list = json.load(patient_file)
         print(f'patient list {patient_list}')
